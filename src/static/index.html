@@ -1,17 +1,70 @@
-
 <!DOCTYPE html>
-<html>
+<html lang="en-US">
 <head>
-<title>Bem vindo aos replays do *GABY STATION*</title>
-<style>
-html { color-scheme: light dark; }
-body { width: 35em; margin: 0 auto;
-font-family: Tahoma, Verdana, Arial, sans-serif; }
-</style>
-<meta http-equiv="content-type" content="text/html;charset=utf-8">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Server Replays</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<h1>o meu deu, meu senhor, me ajude, por favor.</h1>
-<h1>🦅🦅🦅🦅🦅</h1>
+    <header class="angle-rect">
+        <h2 id="header">ServerName - Replays</h1>
+    </header>
+    
+    <main class="angle-rect">
+        <section>
+            <h1>Avaible Replays</h2>
+            <ul id="replayList" class="angle-rect">
+                <!-- list will be generate here-->
+            </ul>
+        </section>
+    </main>
+
+    <footer class="angle-rect">
+        <h id="ip">ss14://loading:1212</h>
+        <a href='' id="dc">Discord</a>
+        <a href='' id="git">Github</a>
+    </footer>
+
+    <script>
+        fetch('/name')
+            .then(response => response.text())
+            .then(data => {
+                setName(data);
+            })
+
+        fetch('/ip')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById("ip").innerText = data
+            })
+        
+        fetch('/discord')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById("dc").href = data;
+            })
+
+            fetch('/github')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById("git").href = data;
+            })
+
+        fetch('/list')
+            .then(response => response.text())
+            .then(data => {
+                console.log(data);
+                document.getElementById('replayList').innerHTML = data;
+            })
+            .catch(error => {
+                console.error('Error getting replays:', error);
+            });
+
+        function setName(name) {
+            document.title = `${name} Replays`;
+            document.getElementById("header").innerText = `${name} Replays`
+        }
+    </script>
 </body>
 </html>

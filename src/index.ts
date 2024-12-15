@@ -45,12 +45,76 @@ if (!server) {
     });
 }
 
+/*
+    routes
+*/
 // replay route
-app.use('/replays', express.static(replayDirectory), serveIndex(replayDirectory, { icons: true }));
+if(!replayDirectory) {
+    app.get('/replays', (req, res) => { res.send("Local replay route is deactivated.") });
+    app.get('/list', (req, res) => { res.send("Local replay route is deactivated.") });
+}
+else {
+    app.use('/replays', express.static(replayDirectory), serveIndex(replayDirectory, { icons: true }));
 
+    app.get('/list', (req, res) => {
+        fs.readdir(replayDirectory, (err, files) => {
+            if (err) {
+                return res.status(500).send(`Error getting replays. - ${err}`);
+            }
+    
+            const zipFiles = files.filter(file => file.endsWith('.zip'));
+    
+            if (zipFiles.length === 0) {
+                return res.send("<span class='error'>Theres no avaible replays</span>");
+            }
 
+            zipFiles.sort((a, b) => {
+                const filePathA = path.join(replayDirectory, a);
+                const filePathB = path.join(replayDirectory, b);
+            
+                const statsA = fs.statSync(filePathA);
+                const statsB = fs.statSync(filePathB);
+            
+                return statsB.birthtime.getTime() - statsA.birthtime.getTime();
+            });
+    
+            let fileListHtml = "<ul>";
+            zipFiles.forEach(file => {
+                const filePath = path.join(replayDirectory, file);
+                const stats = fs.statSync(filePath);
+                const creationDate = stats.birthtime.toLocaleString();
+
+                fileListHtml += `<li class="angle-rect"><a href='/replays/${file}' download>${file}</a> <small>${creationDate}</small></li>`;
+            });
+            fileListHtml += "</ul>";
+    
+            res.send(fileListHtml);
+        });
+    });
+}
+
+// get all in static folder
 app.use('/', express.static(path.join(__dirname, 'static')));
 app.use('/', serveIndex(path.join(__dirname, 'static'), { icons: true }));
 
+/*
+    API
+*/
+// shitcode, pass to a json
 
+//get name (super easy grrr)
+app.get('/name', (req, res) => {
+    res.send(config.serverName);
+});
 
+app.get('/ip', (req, res) => {
+    res.send(config.serverIp);
+});
+
+app.get('/discord', (req, res) => {
+    res.send(config.discord);
+});
+
+app.get('/github', (req, res) => {
+    res.send(config.githubLink);
+});

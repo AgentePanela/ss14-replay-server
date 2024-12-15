@@ -7,8 +7,14 @@ interface SSLConfig {
     certificate: string;
 }
 
+//todo: make a info interface
+
 interface Config {
     port: number;
+    serverName: string;
+    serverIp: string,
+    discord: string,
+    githubLink: string,
     replayDir: string;
     ssl: SSLConfig;
 }
@@ -17,7 +23,11 @@ const configPath = path.join(__dirname, '../config.json');
 
 const defaultConfig: Config = {
     port: 1414,
+    serverName: "myServer",
+    serverIp: "ss14://<ip>:1212",
     replayDir: '<your-server-dir>/replays',
+    discord: "<your-discord-invite-link>",
+    githubLink: "<your-github-link>",
     ssl: {
         active: false,
         private: '/etc/letsencrypt/live/<your-domain>/privkey.pem',
