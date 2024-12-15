@@ -22,9 +22,15 @@ if (config.ssl.active) {
 
         // run the server in https
         server = https.createServer(credentials, app);
-        console.log(`Running in: https://localhost:${port}`);
+        server.listen(port, () => {
+            console.log(`Running in: https://localhost:${port}`);
+        });
+        server.on('error', (err) => {
+            console.error('Error while starting HTTPS server:', err);
+        });
     } catch (error) {
         console.error('SSL files not found or error reading SSL files, falling back to HTTP.');
+        console.error(error);
     }
 }
 
@@ -32,6 +38,10 @@ if (!server) {
     // fallback http
     server = app.listen(port, () => {
         console.log(`Running in: http://localhost:${port}`);
+    });
+
+    server.on('error', (err) => {
+        console.error('Error while starting HTTP server:', err);
     });
 }
 
@@ -42,8 +52,5 @@ app.use('/replays', express.static(replayDirectory), serveIndex(replayDirectory,
 app.use('/', express.static(path.join(__dirname, 'static')));
 app.use('/', serveIndex(path.join(__dirname, 'static'), { icons: true }));
 
-/*
-app.get('/', (req, res) => {
-    res.send('<h1>Gabystation replays</h1>');
-});
-*/
+
+
