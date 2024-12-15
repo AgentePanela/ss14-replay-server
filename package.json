@@ -11,6 +11,7 @@
   "description": "",
   "dependencies": {
     "express": "^4.21.2",
+    "https": "^1.0.0",
     "serve-index": "^1.9.1"
   }
 }
