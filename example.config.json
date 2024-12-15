@@ -1,0 +1,7 @@
+{
+    "ssl": {
+        "private":"/etc/letsencrypt/live/your-domain/privkey.pem",
+        "certificate":"/etc/letsencrypt/live/your-domain/fullchain.pem"
+    },
+    "port": 1414
+}
